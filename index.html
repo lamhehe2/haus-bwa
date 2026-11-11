@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; img-src data: blob:; connect-src https://*.supabase.co https://generativelanguage.googleapis.com; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Haus-BWA">
+<meta name="theme-color" content="#14532d">
+<link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQAAAC0CAIAAACyr5FlAAABkUlEQVR42u3dUQ2DMBiF0csyCUUGMwMSpmAGCAamAAlTgw1MzABvTRoC57z3pfnyk1BIuzIOgSMPW4A4EAfiQByIA3EgDsSBOBAHiANxIA7EgTgQB+JAHIgDcYA4EAfiQByIA3EgDsTB1TxtQXufda5Z/n0vJgceK4gDcSAOxIE4QByIA3EgDsSBOBAH4kAciAPEgTgQB+JAHIgDcSAOxIE4QByIg9zyL/v9t9Us76eXCEwOxIE4EAfiQByIA3EgDsQB4kAciANxEEf28TGAyYE4EAfiQBwgDsSBOBAH4kAciANxIA7iyD6Ov00OEAfiQByIA3EgDsSBOBAH4gBxIA7EgTgQB+JAHIgDcSAOEAfiQByIA3EgDsSBOBAH4kAcIA7EgTgQB+JAHIgDcSAOxAHiQByIA3EgDsSBOBAH19SVcbALmByIg5z4dsjKuyDJOe7QNDkQB+JAHMR7DkwOxIE4EAfiQBwgDsSBOBAH4kAciANxIA7EAeJAHIgDcSAOxIE4EAfiQBwgDsSBOBAHLfwBUGMSLIvJHLgAAAAASUVORK5CYII=">
+<title>Haushalts-BWA</title>
+<style>
+:root{--g:#14532d;--g2:#166534;--bg:#f4f5f2;--card:#fff;--line:#e2e4de;--mut:#6b7280;--red:#b91c1c;--txt:#111827}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--txt);font:15px/1.4 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;border-radius:10px;padding:10px 14px;background:#e7e9e3}
+button.p{background:var(--g);color:#fff;font-weight:600}
+button.d{background:#fee2e2;color:var(--red)}
+button.s{padding:6px 10px;font-size:13px}
+button:disabled{opacity:.5}
+input,select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:16px}
+label{display:block;font-size:12px;color:var(--mut);margin:10px 0 4px}
+.card{background:var(--card);border-radius:14px;padding:14px;margin:10px 0;border:1px solid var(--line)}
+h1{font-size:20px;margin:0 0 4px}h2{font-size:15px;margin:0 0 8px}
+.mut{color:var(--mut);font-size:12px}.err{color:var(--red);font-size:13px;margin-top:8px;white-space:pre-wrap}
+.row{display:flex;gap:8px;align-items:center}.row>*{flex:1}.row>.fx{flex:0 0 auto}
+.neg{color:var(--red)}.pos{color:var(--g2)}
+.num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+#top{position:sticky;top:0;z-index:5;background:var(--g);color:#fff;padding:calc(env(safe-area-inset-top) + 8px) 12px 8px;display:flex;align-items:center;gap:8px}
+#top button{background:rgba(255,255,255,.16);color:#fff;padding:6px 12px}
+#top .m{flex:1;text-align:center;font-weight:600}
+#main{padding:4px 12px calc(env(safe-area-inset-bottom) + 76px);max-width:900px;margin:auto}
+#tabs{position:fixed;bottom:0;left:0;right:0;z-index:5;display:flex;background:#fff;border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom)}
+#tabs button{flex:1;background:none;border-radius:0;padding:8px 2px;font-size:11px;color:var(--mut)}
+#tabs button b{display:block;font-size:19px;font-weight:400}
+#tabs button.on{color:var(--g);font-weight:600}
+.kpi{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.kpi div{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px}
+.kpi span{display:block;font-size:11px;color:var(--mut)}.kpi b{font-size:15px;font-variant-numeric:tabular-nums}
+.bar{margin:8px 0;cursor:pointer}.bar .t{display:flex;justify-content:space-between;font-size:13px}
+.bar .b{height:6px;background:#e7e9e3;border-radius:3px;margin-top:3px}.bar .b i{display:block;height:100%;background:var(--g2);border-radius:3px}
+.tx{display:flex;gap:8px;padding:9px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.tx:last-child{border:0}.tx .n{flex:1;min-width:0}.tx .n div{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.day{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--mut);padding:10px 0 2px;border-bottom:1px solid var(--line)}
+.tag{display:inline-block;font-size:10px;padding:1px 6px;border-radius:8px;background:#e7e9e3;color:#374151;margin-right:4px}
+.tag.w{background:#fef3c7;color:#92400e}
+.scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 -14px;padding:0 0 4px}
+table.bwa{border-collapse:collapse;font-size:12px;min-width:820px;width:100%}
+table.bwa th,table.bwa td{padding:4px 6px;border-bottom:1px solid #eceee8}
+table.bwa th{background:#d9dbd5;font-weight:600;font-size:11px;text-align:right;vertical-align:bottom}
+table.bwa th.g{text-align:center;border-left:2px solid #fff}
+table.bwa td:first-child,table.bwa tr:first-child th:first-child{position:sticky;left:0;background:#fff;text-align:left;width:150px;min-width:140px;max-width:150px;border-right:1px solid var(--line)}
+table.bwa tr:first-child th:first-child{background:#d9dbd5}
+table.bwa td.sep{border-left:2px solid #d9dbd5}
+table.bwa tr.sum td{font-weight:700}
+table.bwa tr.hl td,table.bwa tr.hl td:first-child{background:#c9ccc4;font-weight:700}
+table.bwa tr.cat{cursor:pointer}
+table.bwa .vi{display:block;font-size:10px;color:var(--mut);font-weight:400}
+table.bwa .no{color:var(--mut);font-size:10px;margin-right:4px}
+table.yr{width:100%;border-collapse:collapse;font-size:13px}table.yr td,table.yr th{padding:5px 4px;border-bottom:1px solid var(--line)}table.yr th{font-size:11px;color:var(--mut);text-align:right}table.yr th:first-child{text-align:left}
+#sheet{position:fixed;inset:0;z-index:20;background:rgba(0,0,0,.4);display:none;align-items:flex-end}
+#sheet.on{display:flex}
+#sheet>div{background:var(--bg);width:100%;max-width:900px;margin:auto auto 0;max-height:88vh;overflow:auto;border-radius:18px 18px 0 0;padding:14px 14px calc(env(safe-area-inset-bottom) + 16px)}
+.rv{border:1px solid var(--line);border-radius:12px;padding:10px;margin:8px 0;background:#fff}
+.rv.off{opacity:.45}
+.rv input[type=checkbox]{width:22px;height:22px;flex:0 0 22px}
+.seg{display:flex;background:#e7e9e3;border-radius:10px;padding:2px}.seg button{flex:1;background:none;padding:6px;font-size:13px}.seg button.on{background:#fff;font-weight:600}
+pre{background:#111827;color:#e5e7eb;padding:10px;border-radius:10px;font-size:11px;overflow:auto;max-height:180px}
+#lock{max-width:440px;margin:auto;padding:calc(env(safe-area-inset-top) + 28px) 16px 40px}
+#print{display:none}
+@media print{
+ @page{size:A4 landscape;margin:9mm}
+ html,body{background:#fff}
+ #app,#sheet,#lock,.toast{display:none!important}
+ #print{display:block;font-size:8pt}
+ #print table.bwa{min-width:0;font-size:7.5pt}
+ #print table.bwa td,#print table.bwa th{padding:1.5px 4px;position:static}
+ #print table.bwa td:first-child,#print table.bwa th:first-child{max-width:none}
+ #print table.bwa .vi{display:inline;font-size:7pt}
+ #print table.bwa .vi:before{content:" · "}
+ #print .ph{display:flex;justify-content:space-between;margin-bottom:6px;font-size:8pt}
+ #print tr.hl td{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+ #print th{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<div id="lock"></div>
+<div id="app" style="display:none">
+ <div id="top"><button onclick="mv(-1)">‹</button><div class="m" id="mlabel"></div><button onclick="mv(1)">›</button><span id="sync" onclick="go('set')" style="font-size:12px;min-width:18px;text-align:right"></span></div>
+ <div id="main"></div>
+ <div id="tabs">
+  <button data-t="home" onclick="go('home')"><b>⌂</b>Tổng quan</button>
+  <button data-t="imp" onclick="go('imp')"><b>⬆</b>Nhập ảnh</button>
+  <button data-t="tx" onclick="go('tx')"><b>☰</b>Giao dịch</button>
+  <button data-t="bwa" onclick="go('bwa')"><b>▦</b>BWA</button>
+  <button data-t="set" onclick="go('set')"><b>⚙</b>Cài đặt</button>
+ </div>
+</div>
+<div id="sheet" onclick="if(event.target===this)closeSheet()"><div id="sheetc"></div></div>
+<div id="print"></div>
+<script>
+"use strict";
+/* ============ Stammdaten: BWA-Zeilen ============ */
+// [Nr, Deutsch, Tiếng Việt, Gruppe]  Gruppe: inc|life|home|other|save|xfer  oder Summenzeile s:/h:
+const LINES=[
+['1001','Gehalt / Lohn (Mann)','Lương chồng','inc'],
+['1002','Gehalt / Lohn (Frau)','Lương vợ','inc'],
+['1003','Kindergeld & staatliche Leistungen','Tiền con & trợ cấp nhà nước','inc'],
+['1004','Erstattungen & Rückzahlungen','Tiền được hoàn lại','inc'],
+['1005','Sonstige Einnahmen','Thu nhập khác','inc'],
+['1049','Summe Einnahmen','Tổng thu nhập','s'],
+['1051','Lebensmittel & Supermarkt','Đi chợ, siêu thị','life'],
+['1052','Drogerie & Haushaltswaren','Đồ dùng gia đình','life'],
+['1053','Restaurant, Imbiss & Lieferdienst','Ăn ngoài, đặt đồ ăn','life'],
+['1079','Summe Lebenshaltung','Tổng chi ăn uống, sinh hoạt','s'],
+['1099','Überschuss 1','Còn lại 1 (thu − sinh hoạt)','h'],
+['5000','Miete / Hausrate','Tiền nhà (thuê / trả góp nhà)','home'],
+['5001','Nebenkosten, Strom, Gas, Wasser','Điện, nước, gas, phí phụ','home'],
+['5002','Internet, Handy, Rundfunk','Internet, điện thoại, GEZ','home'],
+['5090','Einrichtung & Instandhaltung','Nội thất, sửa chữa nhà','home'],
+['5990','Summe Wohnkosten','Tổng chi phí nhà ở','s'],
+['6020','Versicherungen','Bảo hiểm','other'],
+['6040','Auto, Tanken & Fahrkarten','Xe, xăng, vé tàu xe','other'],
+['6050','Kinder, Schule & Bildung','Con cái, học hành','other'],
+['6060','Reisen & Urlaub','Du lịch, nghỉ phép','other'],
+['6070','Kleidung & Schuhe','Quần áo, giày dép','other'],
+['6080','Gesundheit & Apotheke','Sức khoẻ, thuốc men','other'],
+['6090','Freizeit, Abos & Online-Shopping','Giải trí, gói đăng ký, mua online','other'],
+['6100','Geschenke & Familienunterstützung','Quà tặng, hỗ trợ gia đình','other'],
+['6200','Kreditraten & Zinsen','Trả góp, lãi vay','other'],
+['6300','Steuern & Gebühren','Thuế, lệ phí','other'],
+['6700','Bankgebühren','Phí ngân hàng','other'],
+['6800','Bargeldabhebung','Rút tiền mặt','other'],
+['6900','Sonstige Ausgaben','Chi khác','other'],
+['6998','Summe sonstige Kosten','Tổng các chi phí khác','s'],
+['6999','Gesamtkosten','Tổng chi phí','s'],
+['7001','Haushaltsergebnis','Kết quả (thu − chi)','h'],
+['8000','Sparen & Geldanlage','Tiết kiệm, đầu tư','save'],
+['9200','Ergebnis nach Sparen','Còn lại sau tiết kiệm','h'],
+];
+const XFER=['9900','Umbuchung eigene Konten','Chuyển giữa các tài khoản của mình (không tính vào BWA)','xfer'];
+const CATS=LINES.filter(l=>l[3].length>1).concat([XFER]);
+const CAT=Object.fromEntries(CATS.map(l=>[l[0],l]));
+const BANKS=['Postbank','N26','Commerzbank','Bargeld','Andere'];
+const MON=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
+const SQL=`create table if not exists public.items (
+  id uuid primary key,
+  user_id uuid not null default auth.uid() references auth.users(id) on delete cascade,
+  data text not null,
+  deleted boolean not null default false,
+  updated_at timestamptz not null default now()
+);
+create index if not exists items_user_upd on public.items (user_id, updated_at);
+alter table public.items enable row level security;
+drop policy if exists "own rows" on public.items;
+create policy "own rows" on public.items for all to authenticated
+  using (user_id = auth.uid()) with check (user_id = auth.uid());
+create or replace function public.items_touch() returns trigger language plpgsql as
+$$ begin new.updated_at = now(); return new; end $$;
+drop trigger if exists items_touch on public.items;
+create trigger items_touch before insert or update on public.items
+  for each row execute function public.items_touch();`;
+
+/* ============ Helfer ============ */
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const nf=new Intl.NumberFormat('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2});
+const fmt=v=>nf.format(v);
+const fz=v=>Math.abs(v)<0.005?'':nf.format(v);
+const pad=n=>String(n).padStart(2,'0');
+const today=()=>{const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate())};
+const dDE=d=>d.slice(8,10)+'.'+d.slice(5,7)+'.'+d.slice(0,4);
+const parseAmt=s=>{s=String(s).trim().replace(/[€\s]/g,'').replace('−','-');if(s.includes(','))s=s.replace(/\./g,'').replace(',','.');const v=parseFloat(s);return isFinite(v)?Math.round(v*100)/100:0};
+const norm=s=>String(s||'').toLowerCase().replace(/[^a-zäöüßà-ỹ ]/g,' ').split(/\s+/).filter(Boolean).slice(0,2).join(' ');
+const b64=u=>{let s='';for(let i=0;i<u.length;i+=0x8000)s+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(s)};
+const ub64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+const te=new TextEncoder(),td=new TextDecoder();
+const uuid=()=>crypto.randomUUID?crypto.randomUUID():([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g,c=>(c^crypto.getRandomValues(new Uint8Array(1))[0]&15>>c/4).toString(16));
+function toast(m){const t=document.createElement('div');t.textContent=m;t.className='toast';t.style.cssText='position:fixed;left:50%;bottom:90px;transform:translateX(-50%);background:#111827;color:#fff;padding:8px 14px;border-radius:20px;font-size:13px;z-index:50;max-width:90%';document.body.appendChild(t);setTimeout(()=>t.remove(),2600)}
+
+/* ============ Zustand ============ */
+const S={key:null,authPw:null,token:null,items:new Map(),tab:'home',ym:today().slice(0,7),review:null,q:'',syncState:'',busy:false};
+let cfg=JSON.parse(localStorage.getItem('hbwa.cfg')||'null');
+const saveCfg=()=>localStorage.setItem('hbwa.cfg',JSON.stringify(cfg));
+
+/* ============ Kryptografie (AES-256-GCM, PBKDF2) ============ */
+async function derive(email,pw){
+  const base=await crypto.subtle.importKey('raw',te.encode(pw),'PBKDF2',false,['deriveBits']);
+  const bits=new Uint8Array(await crypto.subtle.deriveBits({name:'PBKDF2',hash:'SHA-256',salt:te.encode('hbwa-v1|'+email.trim().toLowerCase()),iterations:600000},base,512));
+  S.key=await crypto.subtle.importKey('raw',bits.slice(0,32),'AES-GCM',false,['encrypt','decrypt']);
+  S.authPw=[...bits.slice(32)].map(b=>b.toString(16).padStart(2,'0')).join('');
+  bits.fill(0);
+}
+async function enc(obj){const iv=crypto.getRandomValues(new Uint8Array(12));const ct=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv},S.key,te.encode(JSON.stringify(obj))));const o=new Uint8Array(12+ct.length);o.set(iv);o.set(ct,12);return b64(o)}
+async function dec(s){const u=ub64(s);return JSON.parse(td.decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:u.subarray(0,12)},S.key,u.subarray(12))))}
+async function setId(){const h=new Uint8Array(await crypto.subtle.digest('SHA-256',te.encode('hbwa-set|'+cfg.email)));h[6]=h[6]&15|64;h[8]=h[8]&63|128;const x=[...h.slice(0,16)].map(b=>b.toString(16).padStart(2,'0')).join('');return x.slice(0,8)+'-'+x.slice(8,12)+'-'+x.slice(12,16)+'-'+x.slice(16,20)+'-'+x.slice(20)}
+
+/* ============ Lokaler Speicher (IndexedDB, nur verschlüsselt) ============ */
+let _db;
+function idb(){return _db||(_db=new Promise((ok,no)=>{const r=indexedDB.open('hbwa',1);r.onupgradeneeded=()=>r.result.createObjectStore('items',{keyPath:'id'});r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)}))}
+async function idbAll(){const d=await idb();return new Promise((ok,no)=>{const r=d.transaction('items').objectStore('items').getAll();r.onsuccess=()=>ok(r.result);r.onerror=()=>no(r.error)})}
+async function idbPut(rows){if(!rows.length)return;const d=await idb();return new Promise((ok,no)=>{const t=d.transaction('items','readwrite');rows.forEach(x=>t.objectStore('items').put(x));t.oncomplete=()=>ok();t.onerror=()=>no(t.error)})}
+async function idbClear(){const d=await idb();return new Promise((ok,no)=>{const t=d.transaction('items','readwrite');t.objectStore('items').clear();t.oncomplete=()=>ok();t.onerror=()=>no(t.error)})}
+
+async function loadAll(){
+  S.items.clear();
+  for(const r of await idbAll()){
+    let p=null;if(!r.deleted){try{p=await dec(r.data)}catch(e){continue}}
+    S.items.set(r.id,{id:r.id,p,deleted:!!r.deleted,dirty:!!r.dirty,updated_at:r.updated_at||null,data:r.data});
+  }
+}
+async function put(id,p,deleted=false){
+  const data=await enc(deleted?{k:'del'}:p);
+  const it={id,p:deleted?null:p,deleted,dirty:true,updated_at:S.items.get(id)?.updated_at||null,data};
+  S.items.set(id,it);
+  await idbPut([{id,data,deleted,dirty:true,updated_at:it.updated_at}]);
+}
+const txs=()=>[...S.items.values()].filter(i=>!i.deleted&&i.p&&i.p.k==='tx');
+let _setId;
+function settings(){const it=S.items.get(_setId);return (it&&it.p)||{k:'set',gem:'',model:'gemini-3.6-flash',rules:{}}}
+async function saveSettings(s){await put(_setId,s);kick()}
+
+/* ============ Sync (Supabase – speichert nur Chiffretext) ============ */
+async function login(){
+  const r=await fetch(cfg.url+'/auth/v1/token?grant_type=password',{method:'POST',headers:{apikey:cfg.apikey,'Content-Type':'application/json'},body:JSON.stringify({email:cfg.email,password:S.authPw})});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok||!j.access_token){const e=new Error(j.error_description||j.msg||j.message||('HTTP '+r.status));e.code=j.error_code||j.error||'';throw e}
+  S.token=j.access_token;
+}
+async function signup(){
+  const r=await fetch(cfg.url+'/auth/v1/signup',{method:'POST',headers:{apikey:cfg.apikey,'Content-Type':'application/json'},body:JSON.stringify({email:cfg.email,password:S.authPw})});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error(j.msg||j.error_description||j.message||('HTTP '+r.status));
+  if(j.access_token){S.token=j.access_token;return true}
+  return false;
+}
+async function rest(path,opt={},retry=true){
+  if(!S.token)await login();
+  const r=await fetch(cfg.url+'/rest/v1/'+path,{...opt,headers:{apikey:cfg.apikey,Authorization:'Bearer '+S.token,'Content-Type':'application/json',...(opt.headers||{})}});
+  if(r.status===401&&retry){S.token=null;return rest(path,opt,false)}
+  if(!r.ok)throw new Error('Sync HTTP '+r.status+' '+(await r.text()).slice(0,200));
+  return r.json();
+}
+let _syncing=false,_again=false,_kt;
+function kick(){clearTimeout(_kt);_kt=setTimeout(sync,400)}
+async function sync(){
+  if(!S.key||!cfg||!cfg.url){setSync('');return}
+  if(_syncing){_again=true;return}
+  _syncing=true;setSync('⟳');let changed=false;
+  try{
+    // 1) holen
+    for(;;){
+      const cur=cfg.cursor||'1970-01-01T00:00:00Z';
+      const rows=await rest('items?select=id,data,deleted,updated_at&updated_at=gt.'+encodeURIComponent(cur)+'&order=updated_at.asc&limit=500');
+      if(!rows.length)break;
+      const store=[];
+      for(const r of rows){
+        const loc=S.items.get(r.id);
+        if(loc&&loc.dirty)continue;
+        if(loc&&loc.updated_at===r.updated_at)continue;
+        let p=null;if(!r.deleted){try{p=await dec(r.data)}catch(e){continue}}
+        S.items.set(r.id,{id:r.id,p,deleted:r.deleted,dirty:false,updated_at:r.updated_at,data:r.data});
+        store.push({id:r.id,data:r.data,deleted:r.deleted,dirty:false,updated_at:r.updated_at});changed=true;
+      }
+      await idbPut(store);
+      cfg.cursor=rows[rows.length-1].updated_at;saveCfg();
+      if(rows.length<500)break;
+    }
+    // 2) senden
+    const dirty=[...S.items.values()].filter(i=>i.dirty);
+    for(let i=0;i<dirty.length;i+=200){
+      const chunk=dirty.slice(i,i+200);
+      const res=await rest('items?on_conflict=id',{method:'POST',headers:{Prefer:'resolution=merge-duplicates,return=representation'},body:JSON.stringify(chunk.map(c=>({id:c.id,data:c.data,deleted:c.deleted})))});
+      const store=[];
+      for(const r of res){const loc=S.items.get(r.id);if(loc&&loc.data===r.data){loc.dirty=false;loc.updated_at=r.updated_at;store.push({id:loc.id,data:loc.data,deleted:loc.deleted,dirty:false,updated_at:loc.updated_at})}}
+      await idbPut(store);
+    }
+    cfg.lastSync=Date.now();saveCfg();setSync('●');
+  }catch(e){setSync('⚠');S.syncErr=e.message}
+  _syncing=false;
+  if(changed&&!S.busy&&!$('sheet').classList.contains('on')&&!(S.tab==='imp'&&S.review))render();
+  if(_again){_again=false;kick()}
+}
+function setSync(s){S.syncState=s;const e=$('sync');if(e)e.textContent=s}
+
+/* ============ Sperrbildschirm / Einrichtung ============ */
+function lockScreen(msg){
+  const inv=readInvite();
+  const isNew=!cfg&&!inv;
+  $('app').style.display='none';$('lock').style.display='';
+  $('lock').innerHTML=`<h1>Haushalts-BWA</h1><div class="mut">Sổ thu chi gia đình · mã hoá đầu-cuối</div>
+  <div class="card">
+  ${cfg?`<div class="mut">Gia đình: <b>${esc(cfg.email)}</b></div>`:`
+   <label>E-mail gia đình (dùng chung cho 2 máy)</label><input id="le" type="email" autocomplete="username" autocapitalize="off" value="${esc(inv?inv.email:'')}" ${inv?'readonly':''}>`}
+   <label>Mật khẩu gia đình${isNew?' (ít nhất 10 ký tự)':''}</label><input id="lp" type="password" autocomplete="current-password">
+   ${isNew?`<label>Nhập lại mật khẩu</label><input id="lp2" type="password">`:''}
+   <div style="margin-top:14px"><button class="p" style="width:100%" id="lb" onclick="unlock()">${isNew?'Tạo sổ mới':inv&&!cfg?'Kết nối máy này':'Mở khoá'}</button></div>
+   <div class="err" id="lerr">${esc(msg||'')}</div>
+  </div>
+  <div class="mut">${isNew?'Mật khẩu này tạo ra khoá mã hoá. Không ai (kể cả máy chủ) đọc được dữ liệu nếu không có nó — và nếu quên thì <b>không khôi phục được</b>. Hãy ghi lại ở nơi an toàn.':inv&&!cfg?'Máy này được mời vào sổ gia đình. Nhập đúng mật khẩu gia đình đã đặt trên máy đầu tiên.':''}</div>
+  ${cfg?`<div style="margin-top:24px;text-align:center"><button class="s" onclick="wipe()">Xoá dữ liệu trên máy này</button></div>`:''}`;
+  $('lp').onkeydown=e=>{if(e.key==='Enter')unlock()};
+}
+function readInvite(){try{const m=location.hash.match(/#s=(.+)/);if(!m)return null;const j=JSON.parse(td.decode(ub64(decodeURIComponent(m[1]))));if(validUrl(j.url)&&j.email&&j.apikey)return j}catch(e){}return null}
+const validUrl=u=>/^https:\/\/[a-z0-9-]+\.supabase\.co$/.test(u||'');
+async function unlock(){
+  const err=m=>{$('lerr').textContent=m;$('lb').disabled=false};
+  const pw=$('lp').value;$('lb').disabled=true;$('lerr').textContent='Đang tạo khoá…';
+  await new Promise(r=>setTimeout(r,30));
+  try{
+    if(cfg){
+      await derive(cfg.email,pw);
+      try{await dec(cfg.check)}catch(e){S.key=null;return err('Sai mật khẩu.')}
+    }else{
+      const inv=readInvite();const email=$('le').value.trim().toLowerCase();
+      if(!/^\S+@\S+\.\S+$/.test(email))return err('E-mail không hợp lệ.');
+      if(inv){
+        await derive(email,pw);cfg={email,url:inv.url,apikey:inv.apikey};
+        try{await login()}catch(e){cfg=null;S.key=null;return err('Không đăng nhập được: sai mật khẩu gia đình? ('+e.message+')')}
+      }else{
+        if(pw.length<10)return err('Mật khẩu cần ít nhất 10 ký tự.');
+        if(pw!==$('lp2').value)return err('Hai lần nhập mật khẩu không khớp.');
+        await derive(email,pw);cfg={email};
+      }
+      cfg.check=await enc({ok:1});saveCfg();history.replaceState(null,'',location.pathname);
+    }
+    _setId=await setId();
+    await loadAll();
+    $('lock').style.display='none';$('lock').innerHTML='';$('app').style.display='';
+    render();sync();
+  }catch(e){err('Lỗi: '+e.message)}
+}
+async function wipe(){if(!confirm('Xoá toàn bộ dữ liệu trên MÁY NÀY? (Dữ liệu đã đồng bộ trên máy chủ vẫn còn.)'))return;await idbClear();localStorage.removeItem('hbwa.cfg');location.reload()}
+let _hid=0;
+document.addEventListener('visibilitychange',()=>{if(document.hidden)_hid=Date.now();else{if(S.key&&_hid&&Date.now()-_hid>5*60000)location.reload();else if(S.key)sync()}});
+setInterval(()=>{if(S.key&&!document.hidden)sync()},30000);
+
+/* ============ BWA-Rechnung ============ */
+function rawSums(y,m1,m2){const a=y+'-'+pad(m1)+'-00',b=y+'-'+pad(m2)+'-99',o={};for(const t of txs()){const p=t.p;if(p.d>a&&p.d<b)o[p.c]=(o[p.c]||0)+p.a}return o}
+function calc(raw){
+  const v={},g={inc:0,life:0,home:0,other:0,save:0};
+  for(const l of CATS){if(l[3]==='xfer')continue;const x=(raw[l[0]]||0)*(l[3]==='inc'?1:-1);v[l[0]]=x;g[l[3]]+=x}
+  v['1049']=g.inc;v['1079']=g.life;v['1099']=g.inc-g.life;v['5990']=g.home;v['6998']=g.other;
+  v['6999']=g.life+g.home+g.other;v['7001']=g.inc-v['6999'];v['9200']=v['7001']-g.save;return v;
+}
+function bwa(ym){const y=+ym.slice(0,4),m=+ym.slice(5,7);return{y,m,mi:calc(rawSums(y,m,m)),mv:calc(rawSums(y-1,m,m)),ci:calc(rawSums(y,1,m)),cv:calc(rawSums(y-1,1,m))}}
+const pct=(v,base)=>Math.abs(base)<0.005||Math.abs(v)<0.005?'':nf.format(v/base*100);
+function bwaTable(B){
+  const cols=[B.mi,B.mv,B.ci,B.cv];
+  let h=`<table class="bwa"><thead><tr><th rowspan="2">Bezeichnung · Hạng mục</th><th class="g" colspan="4">Monat · Tháng ${pad(B.m)}/${B.y}</th><th class="g" colspan="4">Aufgelaufen · Luỹ kế 01–${pad(B.m)}/${B.y}</th></tr>
+  <tr><th>Ist-Wert</th><th>%</th><th>Vorjahr</th><th>% VJ</th><th>Ist-Wert</th><th>%</th><th>Vorjahr</th><th>% VJ</th></tr></thead><tbody>`;
+  for(const l of LINES){
+    const k=l[3]==='s'?'sum':l[3]==='h'?'hl':'cat';
+    h+=`<tr class="${k}" ${k==='cat'?`onclick="openCat('${l[0]}')"`:''}><td><span class="no">${l[0]}</span>${esc(l[1])}<span class="vi">${esc(l[2])}</span></td>`;
+    cols.forEach((c,i)=>{h+=`<td class="num${i===2?' sep':''}">${fz(c[l[0]])}</td><td class="num">${pct(c[l[0]],c['1049'])}</td>`});
+    h+='</tr>';
+  }
+  return h+'</tbody></table>';
+}
+
+/* ============ Ansichten ============ */
+function go(t){S.tab=t;render();window.scrollTo(0,0)}
+function mv(d){let y=+S.ym.slice(0,4),m=+S.ym.slice(5,7)+d;if(m<1){m=12;y--}if(m>12){m=1;y++}S.ym=y+'-'+pad(m);render()}
+function render(){
+  if(!S.key)return;
+  $('mlabel').textContent=MON[+S.ym.slice(5,7)-1]+' '+S.ym.slice(0,4);
+  document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===S.tab));
+  setSync(S.syncState);
+  $('main').innerHTML=({home:vHome,imp:vImp,tx:vTx,bwa:vBwa,set:vSet})[S.tab]();
+}
+const cls=v=>v<0?'neg':'pos';
+function vHome(){
+  const B=bwa(S.ym),v=B.mi;
+  const costs=CATS.filter(l=>['life','home','other'].includes(l[3])).map(l=>[l,v[l[0]]]).filter(x=>Math.abs(x[1])>0.005).sort((a,b)=>b[1]-a[1]);
+  const mx=Math.max(1,...costs.map(x=>x[1]));
+  let h=`<div class="kpi" style="margin-top:10px"><div><span>Einnahmen · Thu</span><b class="pos">${fmt(v['1049'])}</b></div><div><span>Ausgaben · Chi</span><b class="neg">${fmt(v['6999'])}</b></div><div><span>Ergebnis · Còn lại</span><b class="${cls(v['7001'])}">${fmt(v['7001'])}</b></div></div>`;
+  h+=`<div class="card"><h2>Chi tiêu theo hạng mục</h2>${costs.length?costs.map(([l,x])=>`<div class="bar" onclick="openCat('${l[0]}')"><div class="t"><span>${esc(l[2])} <span class="mut">${esc(l[1])}</span></span><b class="num">${fmt(x)}</b></div><div class="b"><i style="width:${Math.max(2,x/mx*100)}%"></i></div></div>`).join(''):'<div class="mut">Chưa có giao dịch trong tháng này. Vào <b>Nhập ảnh</b> để tải ảnh chụp màn hình Kontoauszug.</div>'}</div>`;
+  if(Math.abs(v['8000'])>0.005)h+=`<div class="card row" onclick="openCat('8000')"><span>Tiết kiệm, đầu tư · Sparen</span><b class="num fx">${fmt(v['8000'])}</b></div>`;
+  const y=B.y;let rows='',ti=0,tc=0;
+  for(let m=1;m<=12;m++){const c=calc(rawSums(y,m,m));if(Math.abs(c['1049'])<0.005&&Math.abs(c['6999'])<0.005)continue;ti+=c['1049'];tc+=c['6999'];
+    rows+=`<tr onclick="S.ym='${y}-${pad(m)}';render()"><td>${MON[m-1]}</td><td class="num">${fmt(c['1049'])}</td><td class="num">${fmt(c['6999'])}</td><td class="num ${cls(c['7001'])}">${fmt(c['7001'])}</td></tr>`}
+  h+=`<div class="card"><h2>Jahr ${y} · Cả năm</h2>${rows?`<table class="yr"><tr><th>Monat</th><th>Thu</th><th>Chi</th><th>Còn lại</th></tr>${rows}<tr style="font-weight:700"><td>Summe</td><td class="num">${fmt(ti)}</td><td class="num">${fmt(tc)}</td><td class="num ${cls(ti-tc)}">${fmt(ti-tc)}</td></tr></table>`:'<div class="mut">Chưa có dữ liệu.</div>'}</div>`;
+  return h;
+}
+function txRow(t){const p=t.p;return `<div class="tx" onclick="editTx('${t.id}')"><div class="n"><div>${esc(p.n||'(không tên)')}</div><div class="mut"><span class="tag">${esc(p.b||'')}</span>${p.pend?'<span class="tag w">vorgemerkt</span>':''}${esc(CAT[p.c]?CAT[p.c][2]:p.c)}</div></div><div class="num ${cls(p.a)}">${fmt(p.a)}</div></div>`}
+function dayList(list){
+  const by={};list.forEach(t=>(by[t.p.d]=by[t.p.d]||[]).push(t));
+  return Object.keys(by).sort().reverse().map(d=>`<div class="day"><span>${dDE(d)}</span><span class="num">${fmt(by[d].reduce((s,t)=>s+t.p.a,0))}</span></div>`+by[d].map(txRow).join('')).join('');
+}
+function vTx(){
+  const q=S.q.toLowerCase();
+  const list=txs().filter(t=>t.p.d.startsWith(S.ym)&&(!q||(t.p.n+' '+t.p.v+' '+t.p.b+' '+(CAT[t.p.c]||[])[1]+' '+(CAT[t.p.c]||[])[2]).toLowerCase().includes(q)));
+  return `<div class="row" style="margin-top:10px"><input placeholder="Tìm… (tên, ngân hàng, hạng mục)" value="${esc(S.q)}" oninput="S.q=this.value;clearTimeout(window._qt);window._qt=setTimeout(()=>{render();const i=document.querySelector('#main input');i.focus();i.setSelectionRange(i.value.length,i.value.length)},350)"><button class="p fx" onclick="editTx()">+ Thêm</button></div>
+  <div class="card">${list.length?dayList(list):'<div class="mut">Không có giao dịch.</div>'}</div><div class="mut">${list.length} giao dịch</div>`;
+}
+function vBwa(){
+  const B=bwa(S.ym);
+  return `<div class="row" style="margin-top:10px"><div><b>BWA ${pad(B.m)}/${B.y}</b><div class="mut">Chạm vào một hạng mục để xem chi tiết từng ngày</div></div><button class="p fx" onclick="printBwa()">PDF / In</button></div>
+  <div class="card"><div class="scroll">${bwaTable(B)}</div></div><div class="mut">% = tỷ lệ so với Summe Einnahmen · Vorjahr = cùng kỳ năm trước · Aufgelaufen = cộng dồn từ tháng 1.</div>`;
+}
+function printBwa(){
+  const B=bwa(S.ym);
+  $('print').innerHTML=`<div class="ph"><div><b>BWA – Haushalt · Báo cáo tài chính gia đình</b><br>${esc(cfg.email)}</div><div>Monat: <b>${pad(B.m)}/${B.y}</b><br>Monatsbereich: 01/${B.y} bis ${pad(B.m)}/${B.y}</div><div>Währung: EUR<br>Erstellt: ${dDE(today())}</div></div>${bwaTable(B)}`;
+  const t=document.title;document.title='BWA_'+S.ym;window.print();setTimeout(()=>document.title=t,1500);
+}
+/* --- Detail je Kategorie --- */
+function openCat(no,mode){
+  mode=mode||'m';const l=CAT[no],y=S.ym.slice(0,4);
+  const list=txs().filter(t=>t.p.c===no&&(mode==='m'?t.p.d.startsWith(S.ym):(t.p.d.slice(0,4)===y&&t.p.d.slice(0,7)<=S.ym)));
+  const sum=list.reduce((s,t)=>s+t.p.a,0);
+  sheet(`<div class="row"><div><h2 style="margin:0">${esc(l[1])}</h2><div class="mut">${esc(l[2])}</div></div><button class="fx s" onclick="closeSheet()">Đóng</button></div>
+  <div class="seg" style="margin:10px 0"><button class="${mode==='m'?'on':''}" onclick="openCat('${no}','m')">Tháng ${S.ym.slice(5,7)}/${y}</button><button class="${mode==='c'?'on':''}" onclick="openCat('${no}','c')">Luỹ kế 01–${S.ym.slice(5,7)}/${y}</button></div>
+  <div class="card"><div class="row"><b>${list.length} giao dịch</b><b class="num fx ${cls(sum)}">${fmt(sum)}</b></div>${dayList(list)}</div>`);
+}
+function sheet(h){$('sheetc').innerHTML=h;$('sheet').classList.add('on')}
+function closeSheet(){$('sheet').classList.remove('on');$('sheetc').innerHTML='';render()}
+const catOpts=c=>CATS.map(l=>`<option value="${l[0]}" ${l[0]===c?'selected':''}>${l[0]} ${esc(l[2])} · ${esc(l[1])}</option>`).join('');
+const bankOpts=b=>BANKS.concat(BANKS.includes(b)||!b?[]:[b]).map(x=>`<option ${x===b?'selected':''}>${esc(x)}</option>`).join('');
+/* --- Buchung bearbeiten --- */
+function editTx(id){
+  const t=id?S.items.get(id).p:{d:S.ym===today().slice(0,7)?today():S.ym+'-01',n:'',v:'',a:0,c:'1051',b:'Bargeld'};
+  const out=t.a<=0;
+  sheet(`<h2>${id?'Sửa giao dịch':'Thêm giao dịch'}</h2>
+  <div class="seg"><button id="eo" class="${out?'on':''}" onclick="eSign(1)">Chi (−)</button><button id="ei" class="${out?'':'on'}" onclick="eSign(0)">Thu (+)</button></div>
+  <div class="row"><div><label>Ngày</label><input id="ed" type="date" value="${esc(t.d)}"></div><div><label>Số tiền (€)</label><input id="ea" inputmode="decimal" value="${t.a?nf.format(Math.abs(t.a)):''}"></div></div>
+  <label>Tên (người nhận / cửa hàng)</label><input id="en" value="${esc(t.n)}">
+  <label>Verwendungszweck · Ghi chú</label><input id="ev" value="${esc(t.v)}">
+  <label>Hạng mục</label><select id="ec">${catOpts(t.c)}</select>
+  <label>Ngân hàng</label><select id="eb">${bankOpts(t.b)}</select>
+  <div class="row" style="margin-top:14px">${id?`<button class="d fx" onclick="delTx('${id}')">Xoá</button>`:''}<button onclick="closeSheet()">Huỷ</button><button class="p" onclick="saveTx('${id||''}')">Lưu</button></div>`);
+}
+function eSign(o){$('eo').classList.toggle('on',!!o);$('ei').classList.toggle('on',!o)}
+async function saveTx(id){
+  const a=Math.abs(parseAmt($('ea').value));if(!a||!$('ed').value)return toast('Cần nhập ngày và số tiền');
+  const old=id?S.items.get(id).p:{};
+  const p={...old,k:'tx',d:$('ed').value,n:$('en').value.trim(),v:$('ev').value.trim(),a:$('eo').classList.contains('on')?-a:a,c:$('ec').value,b:$('eb').value,pend:false,ts:old.ts||Date.now()};
+  await put(id||uuid(),p);await learn([p]);S.ym=p.d.slice(0,7);closeSheet();kick();
+}
+async function delTx(id){if(!confirm('Xoá giao dịch này?'))return;await put(id,null,true);closeSheet();kick()}
+async function learn(list){const s=settings();s.rules=s.rules||{};let ch=false;for(const p of list){const k=norm(p.n);if(k&&s.rules[k]!==p.c){s.rules[k]=p.c;ch=true}}if(ch)await put(_setId,s)}
+
+/* ============ Import: Screenshot → KI → Prüfen → Speichern ============ */
+function vImp(){
+  if(S.review)return vReview();
+  const s=settings();
+  return `<div class="card"><h2>Nhập ảnh chụp màn hình Kontoauszug</h2>
+  <div class="mut">Chọn một hoặc nhiều ảnh chụp màn hình từ app Postbank, N26, Commerzbank… App tự nhận diện ngân hàng, ngày, số tiền thu/chi và hạng mục. Anh/chị kiểm tra lại rồi mới lưu.</div>
+  ${s.gem?`<input id="imf" type="file" accept="image/*" multiple style="display:none" onchange="runImport(this.files)">
+  <div style="margin-top:12px"><button class="p" style="width:100%;padding:16px" id="imb" onclick="$('imf').click()">⬆ Chọn ảnh</button></div><div class="mut" id="ims" style="margin-top:8px"></div>`
+  :`<div class="err">Chưa có Gemini API key. Vào <b>Cài đặt → Nhận diện ảnh</b> để nhập key trước.</div><div style="margin-top:10px"><button class="p" onclick="go('set')">Mở Cài đặt</button></div>`}
+  </div><div class="card"><div class="row"><span>Hoặc nhập tay một giao dịch (vd. tiền mặt)</span><button class="fx" onclick="editTx()">+ Thêm</button></div></div>`;
+}
+const fileB64=f=>new Promise((ok,no)=>{const r=new FileReader();r.onload=()=>ok(r.result.split(',')[1]);r.onerror=()=>no(r.error);r.readAsDataURL(f)});
+async function gemini(file){
+  const s=settings();
+  const cats=CATS.map(l=>l[0]+' = '+l[1]).join('\n');
+  const prompt=`Du liest einen iPhone-Screenshot aus einer deutschen Banking-App (z. B. Postbank, N26, Commerzbank) mit einer Umsatzliste / einem Kontoauszug. Heute ist ${today()}.
+Extrahiere JEDE sichtbare Buchung (auch teilweise sichtbare nur, wenn Betrag und Name lesbar sind). Ignoriere Kontostände, Salden, Überschriften, Werbung, Menüs.
+Felder je Buchung:
+- date: Buchungsdatum als YYYY-MM-DD. "Heute", "Gestern", Wochentage und Daten ohne Jahr auf das jüngste zurückliegende Datum auflösen.
+- name: Empfänger/Auftraggeber/Händler wie angezeigt.
+- purpose: Verwendungszweck, falls sichtbar, sonst "".
+- amount: Betrag in EUR als Zahl. NEGATIV bei Ausgabe/Abbuchung/Lastschrift/Kartenzahlung, POSITIV bei Geldeingang/Gutschrift.
+- pending: true, wenn als vorgemerkt/ausstehend/pending markiert.
+- category: genau ein Code aus dieser Liste, der am besten passt:
+${cats}
+Hinweise: Supermärkte/Asia-Märkte → 1051; dm/Rossmann → 1052; Lohn/Gehalt → 1001 (bei erkennbar weiblichem Kontoinhaber 1002); Familienkasse/Kindergeld → 1003; Überweisung auf eigenes Konto/zwischen eigenen Konten → 9900; Sparplan/Depot/ETF/Tagesgeld → 8000; Geldautomat → 6800; unklar → 6900 (Ausgabe) bzw. 1005 (Einnahme).
+bank: erkannte Bank anhand der Oberfläche ("Postbank", "N26", "Commerzbank") oder "Andere".
+Wenn das Bild keine Bankumsätze zeigt, gib eine leere Liste zurück.`;
+  const body={contents:[{parts:[{text:prompt},{inline_data:{mime_type:file.type||'image/png',data:await fileB64(file)}}]}],
+   generationConfig:{responseMimeType:'application/json',responseSchema:{type:'OBJECT',properties:{bank:{type:'STRING'},transactions:{type:'ARRAY',items:{type:'OBJECT',properties:{date:{type:'STRING'},name:{type:'STRING'},purpose:{type:'STRING'},amount:{type:'NUMBER'},pending:{type:'BOOLEAN'},category:{type:'STRING'}},required:['date','name','amount','category']}}},required:['bank','transactions']}}};
+  const r=await fetch('https://generativelanguage.googleapis.com/v1beta/models/'+encodeURIComponent(s.model||'gemini-3.6-flash')+':generateContent',{method:'POST',headers:{'Content-Type':'application/json','x-goog-api-key':s.gem},body:JSON.stringify(body)});
+  const j=await r.json().catch(()=>({}));
+  if(!r.ok)throw new Error((j.error&&j.error.message)||('HTTP '+r.status));
+  const txt=((j.candidates||[])[0]?.content?.parts||[]).filter(p=>!p.thought&&p.text).map(p=>p.text).join('');
+  return JSON.parse(txt.replace(/^```json\s*|\s*```$/g,''));
+}
+const dupKey=p=>p.d+'|'+Math.round(p.a*100)+'|'+norm(p.n);
+async function runImport(files){
+  files=[...files];if(!files.length)return;S.busy=true;
+  $('imb').disabled=true;const rules=settings().rules||{};
+  const have=new Set(txs().map(t=>dupKey(t.p)));const rows=[];const errs=[];
+  for(let i=0;i<files.length;i++){
+    $('ims').textContent=`Đang đọc ảnh ${i+1}/${files.length}…`;
+    try{
+      const res=await gemini(files[i]);const seen=new Set();
+      const bank=BANKS.includes(res.bank)?res.bank:'Andere';
+      for(const t of res.transactions||[]){
+        if(!/^\d{4}-\d{2}-\d{2}$/.test(t.date||'')||!isFinite(t.amount))continue;
+        const p={d:t.date,n:String(t.name||'').slice(0,120),v:String(t.purpose||'').slice(0,200),a:Math.round(t.amount*100)/100,c:CAT[t.category]?t.category:(t.amount<0?'6900':'1005'),b:bank,pend:!!t.pending};
+        const rk=rules[norm(p.n)];if(rk&&CAT[rk])p.c=rk;
+        const k=dupKey(p);p.dup=have.has(k);p.sel=!p.dup;seen.add(k);rows.push(p);
+      }
+      seen.forEach(k=>have.add(k));
+    }catch(e){errs.push(`Ảnh ${i+1}: ${e.message}`)}
+  }
+  S.busy=false;
+  if(!rows.length){$('imb').disabled=false;$('ims').innerHTML=`<span class="err">${esc(errs.join('\n')||'Không tìm thấy giao dịch nào trong ảnh.')}</span>`;return}
+  rows.sort((a,b)=>a.d<b.d?1:-1);S.review={rows,errs};render();
+}
+function vReview(){
+  const R=S.review,n=R.rows.filter(r=>r.sel).length;
+  return `<div class="card"><h2>Kiểm tra trước khi lưu</h2><div class="mut">Tìm thấy ${R.rows.length} giao dịch. Sửa hạng mục nếu cần — app sẽ nhớ cho lần sau. Dòng đánh dấu <span class="tag w">trùng?</span> có vẻ đã có sẵn nên đang bỏ chọn.</div>${R.errs.length?`<div class="err">${esc(R.errs.join('\n'))}</div>`:''}</div>
+  ${R.rows.map((r,i)=>`<div class="rv ${r.sel?'':'off'}" id="rv${i}">
+   <div class="row"><input class="fx" type="checkbox" ${r.sel?'checked':''} onchange="rv(${i},'sel',this.checked)"><div style="min-width:0"><b>${esc(r.n)}</b><div class="mut">${esc(r.v)}</div></div><b class="num fx ${cls(r.a)}">${fmt(r.a)}</b></div>
+   <div class="mut" style="margin:4px 0"><span class="tag">${esc(r.b)}</span>${r.pend?'<span class="tag w">vorgemerkt</span>':''}${r.dup?'<span class="tag w">trùng?</span>':''}</div>
+   <div class="row"><input type="date" value="${esc(r.d)}" onchange="rv(${i},'d',this.value)" style="flex:0 0 42%"><select onchange="rv(${i},'c',this.value)">${catOpts(r.c)}</select></div>
+   <div style="margin-top:6px"><button class="s" onclick="rv(${i},'a',${-r.a});render()">Đổi dấu thu ↔ chi</button></div></div>`).join('')}
+  <div class="row" style="position:sticky;bottom:70px;background:var(--bg);padding:8px 0"><button class="fx" onclick="S.review=null;render()">Huỷ</button><button class="p" id="rvs" onclick="saveReview()">Lưu ${n} giao dịch</button></div>`;
+}
+function rv(i,k,v){const r=S.review.rows[i];r[k]=v;if(k==='sel'){$('rv'+i).classList.toggle('off',!v);$('rvs').textContent='Lưu '+S.review.rows.filter(r=>r.sel).length+' giao dịch'}}
+async function saveReview(){
+  const sel=S.review.rows.filter(r=>r.sel&&r.d);const ps=[];
+  for(const r of sel){const p={k:'tx',d:r.d,n:r.n,v:r.v,a:r.a,c:r.c,b:r.b,pend:r.pend,ts:Date.now()};ps.push(p);await put(uuid(),p)}
+  await learn(ps);S.review=null;if(ps.length)S.ym=ps[0].d.slice(0,7);S.tab='tx';render();toast('Đã lưu '+ps.length+' giao dịch');kick();
+}
+
+/* ============ Einstellungen ============ */
+function vSet(){
+  const s=settings(),on=!!cfg.url;
+  const link=on?location.origin+location.pathname+'#s='+encodeURIComponent(b64(te.encode(JSON.stringify({email:cfg.email,url:cfg.url,apikey:cfg.apikey})))):'';
+  return `<div class="card"><h2>Nhận diện ảnh (Google Gemini)</h2>
+  <label>Gemini API key</label><input id="sg" type="password" autocomplete="off" value="${esc(s.gem||'')}" placeholder="AIza…">
+  <label>Model</label><input id="sm" value="${esc(s.model||'gemini-3.6-flash')}" autocapitalize="off">
+  <div style="margin-top:10px"><button class="p" onclick="saveGem()">Lưu</button></div>
+  <div class="mut" style="margin-top:8px">Key được mã hoá và tự đồng bộ sang máy thứ hai. Khi nhập ảnh, ảnh được gửi tới Google để đọc chữ; app không lưu ảnh.</div></div>
+
+  <div class="card"><h2>Đồng bộ 2 điện thoại ${on?'<span class="tag">đang bật</span>':''}</h2>
+  ${on?`<div class="mut">Máy chủ: ${esc(cfg.url)}<br>Lần đồng bộ cuối: ${cfg.lastSync?new Date(cfg.lastSync).toLocaleString('de-DE'):'—'} ${S.syncState==='⚠'?'<span class="err">'+esc(S.syncErr||'')+'</span>':''}</div>
+  <div class="row" style="margin-top:10px"><button onclick="sync().then(()=>{render();toast('Đã đồng bộ')})">Đồng bộ ngay</button><button class="p" onclick="copy(decodeURIComponent('${encodeURIComponent(link)}'),'Đã chép link mời')">Chép link mời máy thứ 2</button></div>
+  <div class="mut" style="margin-top:8px">Gửi link này cho vợ/chồng, mở bằng Safari, nhập mật khẩu gia đình. Link không chứa mật khẩu hay dữ liệu.</div>`
+  :`<div class="mut">Tạo một project Supabase miễn phí (chọn vùng Frankfurt), chạy đoạn SQL dưới đây trong SQL Editor, rồi dán Project URL và API key (publishable / anon) vào đây. Máy chủ chỉ nhận dữ liệu đã mã hoá.</div>
+  <pre id="sql">${esc(SQL)}</pre><button class="s" onclick="copy(SQL,'Đã chép SQL')">Chép SQL</button>
+  <label>Project URL</label><input id="su" placeholder="https://xxxx.supabase.co" autocapitalize="off">
+  <label>API key (publishable / anon)</label><input id="sk" autocapitalize="off">
+  <div style="margin-top:10px"><button class="p" id="sc" onclick="connect()">Kết nối</button></div><div class="err" id="serr"></div>`}</div>
+
+  <div class="card"><h2>Sao lưu & bảo mật</h2>
+  <div class="row"><button onclick="backup()">Tải file sao lưu (đã mã hoá)</button><button onclick="location.reload()">Khoá ngay</button></div>
+  <div class="mut" style="margin-top:8px">Gia đình: ${esc(cfg.email)} · ${txs().length} giao dịch · Mã hoá AES-256-GCM, khoá tạo từ mật khẩu gia đình (PBKDF2, 600.000 vòng). App tự khoá sau 5 phút ở nền.</div>
+  <div style="margin-top:10px"><button class="d s" onclick="wipe()">Xoá dữ liệu trên máy này</button></div></div>`;
+}
+async function saveGem(){const s=settings();s.gem=$('sg').value.trim();s.model=$('sm').value.trim()||'gemini-3.6-flash';await saveSettings(s);toast('Đã lưu')}
+function copy(t,m){(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast(m),()=>prompt('Chép thủ công:',t))}
+async function connect(){
+  const url=$('su').value.trim().replace(/\/+$/,''),k=$('sk').value.trim(),e=$('serr');
+  if(!validUrl(url)||!k){e.textContent='URL phải có dạng https://xxxx.supabase.co và cần API key.';return}
+  $('sc').disabled=true;e.textContent='Đang kết nối…';
+  cfg.url=url;cfg.apikey=k;S.token=null;
+  try{
+    try{await login()}catch(er){
+      if(/confirm/i.test(er.message+er.code))throw new Error('E-mail chưa được xác nhận. Mở thư Supabase gửi tới '+cfg.email+', bấm link xác nhận rồi bấm Kết nối lại.');
+      if(!(await signup()))throw new Error('Đã tạo tài khoản. Hãy mở thư xác nhận Supabase gửi tới '+cfg.email+', bấm link, rồi bấm Kết nối lần nữa. (Nếu e-mail này đã đăng ký trước đó với mật khẩu khác thì không kết nối được.)');
+    }
+    await rest('items?select=id&limit=1');
+    for(const it of S.items.values()){it.dirty=true}
+    await idbPut([...S.items.values()].map(i=>({id:i.id,data:i.data,deleted:i.deleted,dirty:true,updated_at:i.updated_at})));
+    cfg.cursor=null;saveCfg();await sync();render();toast('Đã kết nối');
+  }catch(er){delete cfg.url;delete cfg.apikey;S.token=null;e.textContent=er.message;$('sc').disabled=false}
+}
+async function backup(){
+  const rows=(await idbAll()).map(r=>({id:r.id,data:r.data,deleted:r.deleted}));
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify({app:'hbwa',v:1,email:cfg.email,rows})],{type:'application/json'}));a.download='haushalt-backup-'+today()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),5000);
+}
+
+/* ============ Start ============ */
+if(!window.isSecureContext||!crypto.subtle){$('lock').innerHTML='<h1>Haushalts-BWA</h1><div class="err">App cần chạy qua HTTPS (vd. GitHub Pages) để dùng được mã hoá.</div>'}
+else lockScreen();
+</script>
+</body>
+</html>
