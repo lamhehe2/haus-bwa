@@ -147,6 +147,7 @@ const XFER=['9900','Umbuchung eigene Konten','Chuyển giữa các tài khoản 
 const CATS=LINES.filter(l=>l[3].length>1).concat([XFER]);
 const CAT=Object.fromEntries(CATS.map(l=>[l[0],l]));
 const BANKS=['Postbank','N26','Commerzbank','Bargeld','Andere'];
+const DEFAULT_SYNC={url:'https://whsgaqoyqdqoxpuamyun.supabase.co',apikey:'sb_publishable_tdYbZukNJmPonMYlXqbvzg_L-b9VwZ6'};
 const MON=['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 const SQL=`create table if not exists public.items (
   id uuid primary key,
@@ -325,14 +326,14 @@ async function unlock(){
       }else{
         if(pw.length<10)return err('Mật khẩu cần ít nhất 10 ký tự.');
         if(pw!==$('lp2').value)return err('Hai lần nhập mật khẩu không khớp.');
-        await derive(email,pw);cfg={email};
+        await derive(email,pw);cfg={email};if(DEFAULT_SYNC)cfg.pend=DEFAULT_SYNC;
       }
       cfg.check=await enc({ok:1});saveCfg();history.replaceState(null,'',location.pathname);
     }
     _setId=await setId();
     await loadAll();
     $('lock').style.display='none';$('lock').innerHTML='';$('app').style.display='';
-    render();sync();
+    render();sync();autoLink();
   }catch(e){err('Lỗi: '+e.message)}
 }
 async function wipe(){if(!confirm('Xoá toàn bộ dữ liệu trên MÁY NÀY? (Dữ liệu đã đồng bộ trên máy chủ vẫn còn.)'))return;await idbClear();localStorage.removeItem('hbwa.cfg');location.reload()}
@@ -378,7 +379,7 @@ function vHome(){
   const B=bwa(S.ym),v=B.mi;
   const costs=CATS.filter(l=>['life','home','other'].includes(l[3])).map(l=>[l,v[l[0]]]).filter(x=>Math.abs(x[1])>0.005).sort((a,b)=>b[1]-a[1]);
   const mx=Math.max(1,...costs.map(x=>x[1]));
-  let h=`<div class="kpi" style="margin-top:10px"><div><span>Einnahmen · Thu</span><b class="pos">${fmt(v['1049'])}</b></div><div><span>Ausgaben · Chi</span><b class="neg">${fmt(v['6999'])}</b></div><div><span>Ergebnis · Còn lại</span><b class="${cls(v['7001'])}">${fmt(v['7001'])}</b></div></div>`;
+  let h=(S.linkMsg&&!cfg.url?`<div class="card" onclick="go('set')"><b>Đồng bộ chưa bật</b><div class="err">${esc(S.linkMsg)}</div></div>`:'')+`<div class="kpi" style="margin-top:10px"><div><span>Einnahmen · Thu</span><b class="pos">${fmt(v['1049'])}</b></div><div><span>Ausgaben · Chi</span><b class="neg">${fmt(v['6999'])}</b></div><div><span>Ergebnis · Còn lại</span><b class="${cls(v['7001'])}">${fmt(v['7001'])}</b></div></div>`;
   h+=`<div class="card"><h2>Chi tiêu theo hạng mục</h2>${costs.length?costs.map(([l,x])=>`<div class="bar" onclick="openCat('${l[0]}')"><div class="t"><span>${esc(l[2])} <span class="mut">${esc(l[1])}</span></span><b class="num">${fmt(x)}</b></div><div class="b"><i style="width:${Math.max(2,x/mx*100)}%"></i></div></div>`).join(''):'<div class="mut">Chưa có giao dịch trong tháng này. Vào <b>Nhập ảnh</b> để tải ảnh chụp màn hình Kontoauszug.</div>'}</div>`;
   if(Math.abs(v['8000'])>0.005)h+=`<div class="card row" onclick="openCat('8000')"><span>Tiết kiệm, đầu tư · Sparen</span><b class="num fx">${fmt(v['8000'])}</b></div>`;
   const y=B.y;let rows='',ti=0,tc=0;
@@ -534,11 +535,14 @@ function vSet(){
   ${on?`<div class="mut">Máy chủ: ${esc(cfg.url)}<br>Lần đồng bộ cuối: ${cfg.lastSync?new Date(cfg.lastSync).toLocaleString('de-DE'):'—'} ${S.syncState==='⚠'?'<span class="err">'+esc(S.syncErr||'')+'</span>':''}</div>
   <div class="row" style="margin-top:10px"><button onclick="sync().then(()=>{render();toast('Đã đồng bộ')})">Đồng bộ ngay</button><button class="p" onclick="copy(decodeURIComponent('${encodeURIComponent(link)}'),'Đã chép link mời')">Chép link mời máy thứ 2</button></div>
   <div class="mut" style="margin-top:8px">Gửi link này cho vợ/chồng, mở bằng Safari, nhập mật khẩu gia đình. Link không chứa mật khẩu hay dữ liệu.</div>`
+  :cfg.pend?`<div class="mut">Máy chủ đồng bộ đã được cài sẵn. Chỉ cần xác nhận e-mail gia đình (thư từ Supabase) rồi bấm Kết nối.</div>
+  <input id="su" type="hidden" value="${esc(cfg.pend.url)}"><input id="sk" type="hidden" value="${esc(cfg.pend.apikey)}">
+  <div style="margin-top:10px"><button class="p" id="sc" onclick="connect()">Kết nối</button></div><div class="err" id="serr">${esc(S.linkMsg||'')}</div>`
   :`<div class="mut">Tạo một project Supabase miễn phí (chọn vùng Frankfurt), chạy đoạn SQL dưới đây trong SQL Editor, rồi dán Project URL và API key (publishable / anon) vào đây. Máy chủ chỉ nhận dữ liệu đã mã hoá.</div>
   <pre id="sql">${esc(SQL)}</pre><button class="s" onclick="copy(SQL,'Đã chép SQL')">Chép SQL</button>
-  <label>Project URL</label><input id="su" placeholder="https://xxxx.supabase.co" autocapitalize="off">
-  <label>API key (publishable / anon)</label><input id="sk" autocapitalize="off">
-  <div style="margin-top:10px"><button class="p" id="sc" onclick="connect()">Kết nối</button></div><div class="err" id="serr"></div>`}</div>
+  <label>Project URL</label><input id="su" placeholder="https://xxxx.supabase.co" autocapitalize="off" value="${esc(cfg.pend?cfg.pend.url:'')}">
+  <label>API key (publishable / anon)</label><input id="sk" autocapitalize="off" value="${esc(cfg.pend?cfg.pend.apikey:'')}">
+  <div style="margin-top:10px"><button class="p" id="sc" onclick="connect()">Kết nối</button></div><div class="err" id="serr">${esc(S.linkMsg||'')}</div>`}</div>
 
   <div class="card"><h2>Sao lưu & bảo mật</h2>
   <div class="row"><button onclick="backup()">Tải file sao lưu (đã mã hoá)</button><button onclick="location.reload()">Khoá ngay</button></div>
@@ -547,21 +551,28 @@ function vSet(){
 }
 async function saveGem(){const s=settings();s.gem=$('sg').value.trim();s.model=$('sm').value.trim()||'gemini-3.6-flash';await saveSettings(s);toast('Đã lưu')}
 function copy(t,m){(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>toast(m),()=>prompt('Chép thủ công:',t))}
-async function connect(){
-  const url=$('su').value.trim().replace(/\/+$/,''),k=$('sk').value.trim(),e=$('serr');
-  if(!validUrl(url)||!k){e.textContent='URL phải có dạng https://xxxx.supabase.co và cần API key.';return}
-  $('sc').disabled=true;e.textContent='Đang kết nối…';
+async function linkSync(url,k){
   cfg.url=url;cfg.apikey=k;S.token=null;
   try{
     try{await login()}catch(er){
-      if(/confirm/i.test(er.message+er.code))throw new Error('E-mail chưa được xác nhận. Mở thư Supabase gửi tới '+cfg.email+', bấm link xác nhận rồi bấm Kết nối lại.');
-      if(!(await signup()))throw new Error('Đã tạo tài khoản. Hãy mở thư xác nhận Supabase gửi tới '+cfg.email+', bấm link, rồi bấm Kết nối lần nữa. (Nếu e-mail này đã đăng ký trước đó với mật khẩu khác thì không kết nối được.)');
+      if(/confirm/i.test(er.message+er.code))throw new Error('E-mail chưa được xác nhận. Mở thư Supabase gửi tới '+cfg.email+', bấm link xác nhận, rồi quay lại app bấm Kết nối.');
+      if(!(await signup()))throw new Error('Đã gửi thư xác nhận tới '+cfg.email+'. Mở thư (xem cả mục Spam), bấm link xác nhận, rồi quay lại app bấm Kết nối. (Nếu e-mail này đã đăng ký trước đó với mật khẩu khác thì không kết nối được.)');
     }
     await rest('items?select=id&limit=1');
     for(const it of S.items.values()){it.dirty=true}
     await idbPut([...S.items.values()].map(i=>({id:i.id,data:i.data,deleted:i.deleted,dirty:true,updated_at:i.updated_at})));
-    cfg.cursor=null;saveCfg();await sync();render();toast('Đã kết nối');
-  }catch(er){delete cfg.url;delete cfg.apikey;S.token=null;e.textContent=er.message;$('sc').disabled=false}
+    cfg.cursor=null;delete cfg.pend;S.linkMsg='';saveCfg();await sync();
+  }catch(er){delete cfg.url;delete cfg.apikey;S.token=null;saveCfg();throw er}
+}
+function autoLink(){
+  if(!cfg||cfg.url||!cfg.pend)return;
+  linkSync(cfg.pend.url,cfg.pend.apikey).then(()=>{toast('Đã bật đồng bộ');render()},e=>{S.linkMsg=e.message;render()});
+}
+async function connect(){
+  const url=$('su').value.trim().replace(/\/+$/,''),k=$('sk').value.trim(),e=$('serr');
+  if(!validUrl(url)||!k){e.textContent='URL phải có dạng https://xxxx.supabase.co và cần API key.';return}
+  $('sc').disabled=true;e.textContent='Đang kết nối…';
+  try{await linkSync(url,k);render();toast('Đã kết nối')}catch(er){S.linkMsg=er.message;e.textContent=er.message;$('sc').disabled=false}
 }
 async function backup(){
   const rows=(await idbAll()).map(r=>({id:r.id,data:r.data,deleted:r.deleted}));
